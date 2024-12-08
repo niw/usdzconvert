@@ -8,6 +8,8 @@ import math
 
 import usdUtils
 
+from PIL import Image
+from io import BytesIO
 
 usdStageWithGlTFLoaded = True
 try:
@@ -495,18 +497,21 @@ class glTFConverter:
             self._fillParents(self.gltf['scenes'][0]['nodes'], -1)
         return self._parents[str(nodeIdx)]
 
-
+    # Patched to always use JPEG to make file smaller.
     def saveTexture(self, content, mimeType, textureIdx):
         if not os.path.isdir(self.dstFolder + 'textures'):
             os.mkdir(self.dstFolder + 'textures')
 
-        ext = '.png'
+        filename = 'textures/texgen_' + str(textureIdx) + '.jpg'
+
         if mimeType == 'image/jpeg':
-            ext = '.jpg'
-        filename = 'textures/texgen_' + str(textureIdx) + ext
-        
-        newfile = open(self.dstFolder + filename, 'wb')
-        newfile.write(content)
+            newfile = open(self.dstFolder + filename, 'wb')
+            newfile.write(content)
+        else:
+            byte_stream = BytesIO(content.tobytes())
+            image = Image.open(byte_stream)
+            image.save(self.dstFolder + filename, format='JPEG')
+
         return filename
 
 
