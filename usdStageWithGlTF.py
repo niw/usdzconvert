@@ -1141,7 +1141,7 @@ class glTFConverter:
             elif key == 'NORMAL':
                 primvar_api = UsdGeom.PrimvarsAPI(usdGeom.GetPrim())
                 uvs = primvar_api.CreatePrimvar("normals", Sdf.ValueTypeNames.Normal3fArray, UsdGeom.Tokens.vertex)
-                normalPrimvar.Set(accessor.data)
+                uvs.Set(accessor.data)
             elif key == 'TANGENT':
                 pass
             elif key[0:8] == 'TEXCOORD':
@@ -1159,7 +1159,7 @@ class glTFConverter:
                 texCoordSet = key[9:]
                 primvarName = 'st' if texCoordSet == '0' else 'st' + texCoordSet
                 primvar_api = UsdGeom.PrimvarsAPI(usdGeom.GetPrim())
-                uvs = primvar_api.CreatePrimvar("normals", Sdf.ValueTypeNames.TexCoord2fArray, UsdGeom.Tokens.vertex)
+                uvs = primvar_api.CreatePrimvar(primvarName, Sdf.ValueTypeNames.TexCoord2fArray, UsdGeom.Tokens.vertex)
                 uvs.Set(newData)
             elif key == 'COLOR_0':
                 data = accessor.data
